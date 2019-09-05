@@ -1,0 +1,16 @@
+{
+  "name": "babel-plugin-scenes",
+  "version": "1.0.0",
+  "description": "babel插件，分场景打包对应文件",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "babel",
+    "plugin",
+    "scene"
+  ],
+  "author": "myaya",
+  "license": "ISC"
+}
