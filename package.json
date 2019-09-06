@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-scenes",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "babel插件，分场景打包对应文件",
   "main": "index.js",
   "scripts": {
@@ -12,5 +12,13 @@
     "scene"
   ],
   "author": "myaya",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ayahua/babel-plugin-scenes.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ayahua/babel-plugin-scenes/issues"
+  },
+  "homepage": "https://github.com/ayahua/babel-plugin-scenes#readme"
 }
