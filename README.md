@@ -21,7 +21,7 @@ Via `.babelrc` or babel-loader.
 ### options
 Options is an object that can contain the following properties:
 
-#### scene
+#### scene [string]
 
 Set the application scenario, the plugin will package the file corresponding to the suffix according to this property, for example, set to:
 ```javascript
@@ -36,8 +36,10 @@ Will be packaged with the corresponding `component.test.js`, if there is no such
 
 The js file type suffix can be omitted. Not just js files, the dependencies of other types of files can be handled.
 
+#### alias [object]
+
+Alias settings, functions the same as webpack aliases. Note the alias for the alias `$\supseteq$`webpack here.
+
 ## Note
 
-Currently the plugin can only handle the dependency of `import xxx from xxx`.
-
-Currently the plugin can only handle relative paths starting with `./` or `../`.
+Currently, the plugin can only handle the import mode of the `import from` module of ES6.

@@ -35,7 +35,7 @@ module.exports = function ({types}) {
         visitor: {
             ImportDeclaration(path, { opts = {} }){
                 const { node, hub } = path
-                const { scene = process.env.SCENE, alias, matchAll }  = opts
+                const { scene = process.env.SCENE, alias }  = opts
                 if(!node || !hub || !scene) return
                 const { source, specifiers} = node
                 let sceneSource = null
