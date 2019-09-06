@@ -21,7 +21,7 @@ npm install babel-plugin-scenes --save-dev
 ### options
 options是一个对象，里面可以包含以下属性：
 
-#### scene
+#### scene [string]
 
 设定应用场景，插件会根据这个属性去打包对应后缀的文件，比如设置为：
 ```javascript
@@ -36,8 +36,10 @@ import {a,b} from './component'
 
 js文件类型后缀可以不带。不只是js文件，其他类型文件的依赖也都可以处理。
 
+#### alias [object]
+
+别名设置，功能同webpack的别名。注意此处别名 $\supseteq$ webpack配置的别名。
+
 ## 注意
 
-目前插件只能处理 `import xxx from xxx`的依赖写法。
-
-目前插件只能处理`./`或`../`开头的相对路径。
+目前插件只能处理ES6的`import from`的模块引入方式。
