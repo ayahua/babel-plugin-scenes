@@ -38,7 +38,7 @@ The js file type suffix can be omitted. Not just js files, the dependencies of o
 
 #### alias [object]
 
-Alias settings, functions the same as webpack aliases. Note the alias for the alias `$\supseteq$`webpack here.
+Alias settings, functions the same as webpack aliases. Note the alias for the alias ![](http://latex.codecogs.com/gif.latex?\\supseteq) webpack here.
 
 ## Note
 
