@@ -1,35 +1,6 @@
-const nPath = require('path')
+const plugins = require('./plugins')
+const { sceneSourceBuild } = require('./utils')
 
-const fileReg = /^[.]/
-
-const getFolder = function (sourceFileName) {
-    const nametoArray = sourceFileName.split('/')
-    return nametoArray.splice(0,nametoArray.length - 1).join('/')
-}
-const getFile = function (sourceFileName, original, aliasSource) {
-    const nametoArray = sourceFileName.split('/')
-    nametoArray.splice(nametoArray.length - 1, 1)
-    if(aliasSource){
-        return original.replace(/([^/]*)/, nPath.resolve(__dirname, '../../', aliasSource))
-    }
-}
-const getSceneSource = function (source, scene, original) {
-    if(!source) return
-    const sceneSourceArray = source.match(/([^/]*)$/)[0].split('.')
-    sceneSourceArray.splice(1,0,scene)
-    const sceneSource = sceneSourceArray.join('.')
-    const sceneSourceComplete = source.replace(/([^/]*)$/, sceneSource)
-    let hasRequire = null
-    try {
-        const sceneSourceReuqire =  require.resolve(sceneSourceComplete)
-        hasRequire = !!sceneSourceReuqire
-    } catch(err){
-        hasRequire = false
-    }
-    if(hasRequire){
-        return original.replace(/([^/]*)$/, sceneSource)
-    }
-}
 module.exports = function ({types}) {
     return {
         visitor: {
@@ -38,20 +9,24 @@ module.exports = function ({types}) {
                 const { scene = process.env.SCENE, alias }  = opts
                 if(!node || !hub || !scene) return
                 const { source, specifiers} = node
-                let sceneSource = null
-                let filename = null
-                let aliasSource = null
-                if(fileReg.test(source.value)){
-                    const sourceFolder = getFolder(hub.file.opts.filename)
-                    filename = nPath.resolve(sourceFolder, source.value)
-                }else if(alias) {
-                    aliasSource = alias[source.value.match(/([^/]*)/)[0]]
-                    filename = getFile(hub.file.opts.filename, source.value, aliasSource)
-                }
-                sceneSource = getSceneSource(filename, scene, source.value)
+                const {sceneSource, aliasSource, filename} = sceneSourceBuild(source.value, hub.file, alias, scene)
                 if(sceneSource || aliasSource){
                     const declarations = types.ImportDeclaration(specifiers, types.StringLiteral(sceneSource || filename))
                     path.replaceWith(declarations)
+                }
+            },
+            CallExpression(path, { opts = {} }){
+                const { node } = path;
+                const { callee} = node;
+                const { scene = process.env.SCENE, alias }  = opts
+                if(node.isTrans) return
+                node.isTrans = true
+                if(types.isImport(callee)){
+                    const declarations = plugins[node.arguments[0].type]({node, types, scene, alias, path})
+                    declarations && path.replaceWith(declarations)
+                }else if (callee.name === 'require'){
+                    const declarations = plugins.requireMethod({node, types, scene, alias, path})
+                    declarations && path.replaceWith(declarations)
                 }
             }
         }

@@ -36,10 +36,15 @@ import {a,b} from './component'
 
 js文件类型后缀可以不带。不只是js文件，其他类型文件的依赖也都可以处理。
 
-#### alias [object]
+#### alias [object] (v1.1.0)
 
 别名设置，功能同webpack的别名。注意此处别名![](http://latex.codecogs.com/gif.latex?\\supseteq)webpack配置的别名。
 
 ## 注意
 
-目前插件只能处理ES6的`import from`的模块引入方式。
+目前插件可以处理的模块引入方式有：
+ES6的`import from`的模块引入方式；(v1.0.0)
+ES6的`import()`动态加载方法； (v1.2.0)
+`require()`模块引入。(v1.2.0)
+
+因为存在打包缓存的缘故，有时候更改文件后缀之后需要重启项目或者修改引用该后缀文件的文件代码才会起效，否则可能会报错找不到该文件依赖。
