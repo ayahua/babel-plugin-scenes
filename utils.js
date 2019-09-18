@@ -1,4 +1,5 @@
 const nPath = require('path')
+const fs = require('fs')
 
 const fileReg = /^[.]/
 const getFolder = function (sourceFileName) {
@@ -12,8 +13,11 @@ const getFile = function (sourceFileName, original, aliasSource) {
         return original.replace(/([^/]*)/, nPath.resolve(__dirname, '../../', aliasSource))
     }
 }
-const getSceneSource = function (source, scene, original) {
+const getSceneSource = function (source, scene) {
     if(!source) return
+    if(fs.existsSync(source) && fs.lstatSync(source).isDirectory()){
+        source += '/index'
+    }
     const sceneSourceArray = source.match(/([^/]*)$/)[0].split('.')
     sceneSourceArray.splice(1,0,scene)
     const sceneSource = sceneSourceArray.join('.')
@@ -38,14 +42,14 @@ const sceneSourceBuild = function(pathArg, file, alias, scene){
     if(fileReg.test(pathArg)){
         const sourceFolder = getFolder(file.opts.filename)
         filename = nPath.resolve(sourceFolder, pathArg)
-      }else if(alias) {
-        aliasSource = alias[pathArg.match(/([^/]*)/)[0]]
-        if(aliasSource){
-          filename = getFile(file.opts.filename, pathArg, aliasSource)
-        }else{
-          filename = pathArg
-        }
+    }else if(alias) {
+      aliasSource = alias[pathArg.match(/([^/]*)/)[0]]
+      if(aliasSource){
+        filename = getFile(file.opts.filename, pathArg, aliasSource)
+      }else if(/^[/]/.test(pathArg)){
+        filename = pathArg
       }
+    }
       sceneSource = getSceneSource(filename, scene, pathArg)
       return {sceneSource, aliasSource, filename}
 }
