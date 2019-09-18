@@ -42,9 +42,9 @@ Alias settings, functions the same as webpack aliases. Note the alias for the al
 
 ## Note
 
-Currently, the modules that can be processed by plugins can be introduced in the following ways:
-The introduction mode of the `import from` module of ES6; (v1.0.0)
-ES6's `import()` dynamic loading method; (v1.2.0)
-`require()` (v1.2.0)
+Currently, the modules that can be processed by plugins can be introduced in the following ways:<br>
+The introduction mode of the `import from` module of ES6; (v1.0.0)<br>
+ES6's `import()` dynamic loading method; (v1.2.0)<br>
+`require()` (v1.2.0)<br>
 
 Because of the package cache, sometimes it is necessary to restart the project after changing the file suffix or modify the file code that references the suffix file, otherwise the file dependency may not be found.
