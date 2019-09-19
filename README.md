@@ -47,4 +47,4 @@ The introduction mode of the `import from` module of ES6; (v1.0.0)<br>
 ES6's `import()` dynamic loading method; (v1.2.0)<br>
 `require()` (v1.2.0)<br>
 
-Because of the package cache, sometimes it is necessary to restart the project after changing the file suffix or modify the file code that references the suffix file, otherwise the file dependency may not be found.
+Need to set the babel without opening the cache. Because of the babel cache, sometimes changing the file suffix requires modifying the file code that references the suffix file to take effect.
