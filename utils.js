@@ -35,7 +35,7 @@ const getSceneSource = function (source, scene) {
     }
 }
 const sceneSourceBuild = function(pathArg, file, alias, scene){
-    if(!file) return
+    if(!file || !pathArg) return
     let sceneSource = null
     let filename = null
     let aliasSource = null

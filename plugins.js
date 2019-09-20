@@ -4,7 +4,7 @@ module.exports = {
   TemplateLiteral({node, scene, types: t}){   
     let { expressions, quasis } = node.arguments[0]
     const secneQuasis = [...quasis]
-    secneQuasis.splice(-1, 1, t.TemplateElement({raw: `.${scene}`}))
+    secneQuasis.splice(-1, 1, t.TemplateElement({raw: `.${scene}`, cooked: `.${scene}`}))
     let sceneDeclarations = t.CallExpression(
       t.Import(),
       [t.TemplateLiteral(
@@ -71,6 +71,7 @@ module.exports = {
   requireMethod({node, scene, types: t, path, alias}){
     const { hub: {file} } = path
     const pathArg = node.arguments[0].value
+    if(!pathArg) return
     const {sceneSource, aliasSource, filename} = sceneSourceBuild(pathArg, file, alias, scene)
     let declarations
     if(sceneSource || aliasSource){
