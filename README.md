@@ -46,5 +46,6 @@ Currently, the modules that can be processed by plugins can be introduced in the
 The introduction mode of the `import from` module of ES6; (v1.0.0)<br>
 ES6's `import()` dynamic loading method; (v1.2.0)<br>
 `require()` (v1.2.0)<br>
+All of the above methods support the omitting of the word 'index'.
 
 Need to set the babel without opening the cache. Because of the babel cache, sometimes changing the file suffix requires modifying the file code that references the suffix file to take effect.

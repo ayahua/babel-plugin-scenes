@@ -3,6 +3,21 @@ const { sceneSourceBuild } = require('./utils')
 module.exports = {
   TemplateLiteral({node, scene, types: t}){   
     let { expressions, quasis } = node.arguments[0]
+    const secneIndexQuasis = [...quasis]
+    secneIndexQuasis.splice(-1, 1, t.TemplateElement({raw: `/index.${scene}`, cooked: `/index.${scene}`}))
+    let sceneIndexDeclarations = t.CallExpression(
+      t.Import(),
+      [t.TemplateLiteral(
+        secneIndexQuasis,
+        expressions
+       )
+      ]
+    )
+    sceneIndexDeclarations.isTrans = true
+    const indexArrowFunction = t.ArrowFunctionExpression(
+      [],
+      sceneIndexDeclarations
+    )
     const secneQuasis = [...quasis]
     secneQuasis.splice(-1, 1, t.TemplateElement({raw: `.${scene}`, cooked: `.${scene}`}))
     let sceneDeclarations = t.CallExpression(
@@ -14,13 +29,21 @@ module.exports = {
       ]
     )
     sceneDeclarations.isTrans = true;
+    let indexDeclarations = t.CallExpression(
+      t.MemberExpression(
+        sceneDeclarations,
+        t.Identifier('catch')
+      ),
+      [indexArrowFunction]
+    )
+    indexDeclarations.isTrans = true  
     const arrowFunction =  t.ArrowFunctionExpression(
       [],
       node
     )
     let declarations = t.CallExpression(
     	t.MemberExpression(
-          sceneDeclarations,
+          indexDeclarations,
           t.Identifier('catch')
         ),
       [arrowFunction]
