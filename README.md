@@ -6,7 +6,7 @@ Babel plugin, compile the corresponding suffix file by scene.
 
 ## why babel-plugin-scenes
 
-Put the code with different scenes in different file maintenance, such as `page.index` and `page.en.js`, and then package the corresponding files according to the scene when packaging.
+Put the code with different scenes in different file maintenance, such as `page.js` and `page.en.js`, and then package the corresponding files according to the scene when packaging.
 
 ## Usage
 ```bash

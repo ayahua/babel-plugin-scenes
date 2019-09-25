@@ -1,7 +1,7 @@
 const plugins = require('./plugins')
 const { sceneSourceBuild } = require('./utils')
 
-module.exports = function ({types}) {
+module.exports = function ({template, types}) {
     return {
         visitor: {
             ImportDeclaration(path, { opts = {} }){
@@ -15,16 +15,18 @@ module.exports = function ({types}) {
                     path.replaceWith(declarations)
                 }
             },
-            CallExpression(path, { opts = {} }){
-                const { node } = path;
-                const { callee} = node;
+            Import(path, { opts = {} }) {
+                const node = path.parent;
                 const { scene = process.env.SCENE, alias }  = opts
                 if(node.isTrans) return
                 node.isTrans = true
-                if(types.isImport(callee)){
-                    const declarations = plugins[node.arguments[0].type]({node, types, scene, alias, path})
-                    declarations && path.replaceWith(declarations)
-                }else if (callee.name === 'require'){
+                const declarations = plugins[node.arguments[0].type]({node, types, scene, alias, path: path.parentPath, template})
+                declarations && path.parentPath.replaceWith(declarations)
+            },
+            CallExpression(path, { opts = {} }){
+                if (path.node.callee.name === 'require'){
+                    const { node } = path
+                    const { scene = process.env.SCENE, alias }  = opts
                     const declarations = plugins.requireMethod({node, types, scene, alias, path})
                     declarations && path.replaceWith(declarations)
                 }

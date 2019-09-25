@@ -1,26 +1,12 @@
 const { sceneSourceBuild } = require('./utils')
 
 module.exports = {
-  TemplateLiteral({node, scene, types: t}){   
+  TemplateLiteral({node, scene, types: t, template}){ 
+    const buildDeclarations = template('SCEDEC.catch(() => SCEINDEC).catch(() => OLDDEC)')
     let { expressions, quasis } = node.arguments[0]
-    const secneIndexQuasis = [...quasis]
-    secneIndexQuasis.splice(-1, 1, t.TemplateElement({raw: `/index.${scene}`, cooked: `/index.${scene}`}))
-    let sceneIndexDeclarations = t.CallExpression(
-      t.Import(),
-      [t.TemplateLiteral(
-        secneIndexQuasis,
-        expressions
-       )
-      ]
-    )
-    sceneIndexDeclarations.isTrans = true
-    const indexArrowFunction = t.ArrowFunctionExpression(
-      [],
-      sceneIndexDeclarations
-    )
     const secneQuasis = [...quasis]
     secneQuasis.splice(-1, 1, t.TemplateElement({raw: `.${scene}`, cooked: `.${scene}`}))
-    let sceneDeclarations = t.CallExpression(
+    let SCEDEC = t.CallExpression(
       t.Import(),
       [t.TemplateLiteral(
         secneQuasis,
@@ -28,54 +14,23 @@ module.exports = {
        )
       ]
     )
-    sceneDeclarations.isTrans = true;
-    let indexDeclarations = t.CallExpression(
-      t.MemberExpression(
-        sceneDeclarations,
-        t.Identifier('catch')
-      ),
-      [indexArrowFunction]
-    )
-    indexDeclarations.isTrans = true  
-    const arrowFunction =  t.ArrowFunctionExpression(
-      [],
-      node
-    )
-    let declarations = t.CallExpression(
-    	t.MemberExpression(
-          indexDeclarations,
-          t.Identifier('catch')
-        ),
-      [arrowFunction]
-    )
-    declarations.isTrans = true
-    return declarations
-  },
-  Identifier({node, scene, types: t}) {
-    const pathArg = node.arguments[0]
-    let sceneDeclarations = t.CallExpression(
+    SCEDEC.isTrans = true;
+    const secneIndexQuasis = [...quasis]
+    secneIndexQuasis.splice(-1, 1, t.TemplateElement({raw: `/index.${scene}`, cooked: `/index.${scene}`}))
+    let SCEINDEC = t.CallExpression(
       t.Import(),
-    	[t.TemplateLiteral(
-          [
-            t.TemplateElement({raw: ''}),
-          	t.TemplateElement({raw: `.${scene}`})
-          ],
-          [pathArg]
-        )
+      [t.TemplateLiteral(
+        secneIndexQuasis,
+        expressions
+       )
       ]
     )
-    sceneDeclarations.isTrans = true
-    const arrowFunction =  t.ArrowFunctionExpression(
-      [],
-      node
-    )
-    let declarations = t.CallExpression(
-      t.MemberExpression(
-        sceneDeclarations,
-        t.Identifier('catch')
-      ),
-      [arrowFunction]
-    )
+    SCEINDEC.isTrans = true
+    let declarations = buildDeclarations({
+      SCEDEC,
+      SCEINDEC,
+      OLDDEC: node
+    })
     declarations.isTrans = true
     return declarations
   },
@@ -99,7 +54,6 @@ module.exports = {
     let declarations
     if(sceneSource || aliasSource){
         declarations = t.CallExpression(t.Identifier('require'), [t.StringLiteral(sceneSource || filename)])
-        declarations.isTrans = true
     }
     return declarations
   }
